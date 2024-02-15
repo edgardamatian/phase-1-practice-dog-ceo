@@ -25,5 +25,65 @@
 
     </ul>
 
+    <script>
+      const imgUrl = "https://dog.ceo/api/breeds/image/random/4";
+      const breedUrl = "https://dog.ceo/api/breeds/list/all";
+
+      function fetchAndDisplayImages() {
+        fetch(imgUrl)
+          .then(response => response.json())
+          .then(data => {
+            const imageContainer = document.getElementById('dog-image-container');
+            data.message.forEach(imageUrl => {
+              const img = document.createElement('img');
+              img.src = imageUrl;
+              imageContainer.appendChild(img);
+            });
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+
+      function fetchAndDisplayBreeds() {
+        fetch(breedUrl)
+          .then(response => response.json())
+          .then(data => {
+            const breedList = document.getElementById('dog-breeds');
+            const breeds = data.message;
+
+            for (const breed in breeds) {
+              const li = document.createElement('li');
+              li.textContent = breed;
+              breedList.appendChild(li);
+            }
+
+            const breedDropdown = document.getElementById('breed-dropdown');
+
+            breedDropdown.addEventListener('change', function(event) {
+              const selectedLetter = event.target.value.toLowerCase();
+
+              const breedItems = breedList.getElementsByTagName('li');
+              for (let i = 0; i < breedItems.length; i++) {
+                const breedItem = breedItems[i];
+                const breedName = breedItem.textContent.toLowerCase();
+                if (breedName.startsWith(selectedLetter)) {
+                  breedItem.style.display = 'block';
+                } else {
+                  breedItem.style.display = 'none';
+                }
+              }
+            });
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+
+      window.onload = function () {
+        fetchAndDisplayImages();
+        fetchAndDisplayBreeds();
+      };
+    </script>
   </body>
 </html>
